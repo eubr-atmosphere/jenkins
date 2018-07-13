@@ -1,4 +1,4 @@
-FROM eubraatmosphere/eubraatmosphere_autobuild:ubuntu16.04
+FROM eubraatmosphere/eubraatmosphere_autobuild:ubuntu16
 LABEL description="Container with python 3 and python test libraries"
 MAINTAINER Alfonso Pérez (alpegon3@upv.es)
 
