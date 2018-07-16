@@ -10,5 +10,6 @@ RUN apt-get update && apt-get install -y \
     python3-ply \
     python-tox \
     python3-coverage \
+    python3-pip \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*

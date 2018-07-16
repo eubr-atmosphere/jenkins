@@ -5,6 +5,7 @@ MAINTAINER Alfonso Pérez (alpegon3@upv.es)
 # Update and install all the necessary packages
 RUN apt-get update && apt-get install -y \
     python2.7 \
+    python-pip \
     python-nose \
     python-mock \
     python-ply \
