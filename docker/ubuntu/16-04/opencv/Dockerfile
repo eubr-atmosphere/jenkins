@@ -1,4 +1,4 @@
-FROM eubraatmosphere/eubraatmosphere_autobuild:ub16_python
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub16_python2
 LABEL author = "Ignacio"
 LABEL description = "opencv support"
  
