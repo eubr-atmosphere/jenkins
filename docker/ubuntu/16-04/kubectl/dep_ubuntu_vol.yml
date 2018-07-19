@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ubuntu2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ubuntu2
+    spec: 
+      volumes:
+      - name: kubeconfig
+        hostPath:
+          path: /etc/kubernetes/kubelet.conf
+      - name: kubecerts
+        hostPath:
+          path: /var/lib/kubelet/pki
+      containers:
+        - name: ubuntu-cont2
+          image: ubuntu
+          volumeMounts:
+          - name: kubeconfig
+            mountPath: /etc/kubernetes/kubelet.conf
+            readOnly: true
+          - name: kubecerts
+            mountPath: /var/lib/kubelet/pki
+            readOnly: true
+          command: ['sh', '-c', 'echo Hello Kubernetes from ubuntu! && sleep 3600']
+
