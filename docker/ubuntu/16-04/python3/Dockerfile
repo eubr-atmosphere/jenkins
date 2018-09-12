@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     python3-ply \
     python-tox \
     python3-coverage \
-    python3-pip \
- && apt-get clean \
+    python3-pip 
+RUN pip3 install ipyparallel
+RUN pip3 install opencv-python
+RUN apt-get -y install libsm6 libxrender1
+RUN apt-get clean \
  && rm -rf /var/lib/apt/lists/*
