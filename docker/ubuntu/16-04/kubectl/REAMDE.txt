@@ -1,0 +1,3 @@
+To run a job using kubectl
+
+sudo kubectl --server https://10.0.0.4:6443 --insecure-skip-tls-verify=true --kubeconfig=/etc/kubernetes/kubelet.conf get pods

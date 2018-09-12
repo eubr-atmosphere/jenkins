@@ -2,5 +2,5 @@
 
 # We add the injection of an ssh-key 
 set -e
-echo $SSHKEY > .ssh/authorized_keys    
+echo $SSHKEY > ~/.ssh/authorized_keys    
 /usr/sbin/sshd -D

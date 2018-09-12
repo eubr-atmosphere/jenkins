@@ -1,4 +1,4 @@
-FROM eubraatmosphere/eubraatmosphere_autobuild:ub16_python2
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub16_opencv
 LABEL description="nfsclient to be used with itsthenetwork/nfs-server-alpine:latest"
 MAINTAINER Ignacio Blanquer (iblanque@dsic.upv.es)
 

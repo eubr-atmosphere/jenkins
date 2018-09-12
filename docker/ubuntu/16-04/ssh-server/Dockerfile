@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM eubraatmosphere/eubraatmosphere_autobuild:ubuntu16
 MAINTAINER Ignacio Blanquer <iblanque@dsic.upv.es> 
 
 RUN apt-get update
@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get -yq install openssh-server; \
   mkdir -p /var/run/sshd; \
   mkdir /root/.ssh && chmod 700 /root/.ssh; \
-  cat /dev/zero | ssh-keygen -q -N "" \
+  cat /dev/zero | ssh-keygen -q -N ""; \
   touch /root/.ssh/authorized_keys
 
 COPY bin/* /usr/local/bin/
@@ -17,4 +17,4 @@ EXPOSE 22
 #ENTRYPOINT ["ssh-start"]
 #CMD ["ssh-server"]
 
-CMD ["ssh-start"]
+ENTRYPOINT ["/usr/local/bin/ssh-start"]

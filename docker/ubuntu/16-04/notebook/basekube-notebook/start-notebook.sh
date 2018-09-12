@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+
 set -e
 
 if [ "$SKIPMOUNT" != "true" ]; then
@@ -22,12 +25,18 @@ if [ "$SKIPMOUNT" != "true" ]; then
   chmod 400 ~/.ssh/config
 
   echo "Connecting to root@$SERVER"
-  sshfs -o allow_other root@$SERVER:/ $MOUNTPOINT
+  HOMEUSER=$HOME
+  sudo sshfs -o allow_other -o IdentityFile=$HOMEUSER/.ssh/id_rsa -o StrictHostKeyChecking=no root@$SERVER:/ $MOUNTPOINT
 fi
 
-# This solution does not work if the argument is a set of bash commands
-# $@
 
-# Using this instead
-echo "$@" >.runcmd
-source .runcmd
+if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
+  # launched by JupyterHub, use single-user entrypoint
+  exec /usr/local/bin/start-singleuser.sh $*
+else
+  if [[ ! -z "${JUPYTER_ENABLE_LAB}" ]]; then
+    . /usr/local/bin/start.sh jupyter lab $*
+  else
+    . /usr/local/bin/start.sh jupyter notebook $*
+  fi
+fi

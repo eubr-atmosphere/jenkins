@@ -1,0 +1,137 @@
+network private ( 
+  outbound='no'
+)
+
+network public ( 
+  outbound= 'yes' and
+  outports = '8080/tcp,50000/tcp'  
+)
+
+system front (
+    cpu.count>=4 and
+    memory.size>=16384m and
+    disk.0.os.name='linux' and
+    disk.0.image.url = 'one://ramses.i3m.upv.es/594' and
+    disk.0.os.credentials.username = 'ubuntu' and
+    disk.0.os.credentials.password = 'yoyoyo' and
+    net_interface.0.connection = 'public' and
+    net_interface.0.dns_name = 'jenkins' and
+    net_interface.1.connection = 'private' and
+    net_interface.1.dns_name = 'grycapregistry' and
+    disk.0.applications contains (name='ansible.modules.grycap.docker') and
+    disk.0.applications contains (name='ansible.modules.grycap.docker-registry')
+)
+
+
+configure front (
+@begin
+---
+  - vars:
+      PRIVATE_NODENAME_DOCKER_REGISTRY: grycapregistry
+      SSH_KEY_IBLANQUE: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmXhQhGmglM8BF6wAHXPv7JFlYNr1+Cus2/NgsWrqCjDC8tV7VgESqjxFpmksg+BRQW4Jj3B11O/0irrcY2AjinZ1iN/vRJ5EoPbVV20nxpRBN2T9rGSzKsPe4WYVwkOCHql2bTZTycSihhHh2xGg/c1f5JP4GjDuZqiGbwtM0uq2cYzAPhI/QBVnIegigoB22Ob8WA/CoALr7lr6SpKqx0YDHe5/FLuTctSCUzJRpRm8+11/cKJXYnKJKwq9oJmr7CaRTpIJOyIyRMzd7gRTbmj0EEFHpALHqe0CmdJlHHQwy95Tb52ycC1vaFTJePmbh+H6NGd3LIgoLy6iwDcZx iblanque@veraw140-233.wi-fi.upv.es
+
+    roles:
+      - { role: 'grycap.docker' }  # Installs Docker
+      - { role: 'grycap.docker-registry', docker_type_of_node: 'front', docker_installation: 'both', front_hostname: '{{ PRIVATE_NODENAME_DOCKER_REGISTRY }}' }
+    
+    tasks:
+
+      # USERS
+      - name: "Add ubuntu to docker group"
+        command: usermod -a -G docker ubuntu
+
+      - name: "Create user atmosphere"
+        user:
+          name: atmosphere
+          groups: docker,sudo
+          shell: /bin/bash
+      - name: "Create .ssh directory"
+        file:
+          path: "/home/atmosphere/.ssh"
+          state: directory    
+      - name: "Add public key to atmosphere"
+        authorized_key:
+          key: "{{ SSH_KEY_IBLANQUE }}"
+          state: present
+          user: atmosphere
+      - name: "Change permisions for .ssh directory"
+        command: "chown -R atmosphere:atmosphere /home/atmosphere/.ssh/"
+
+      - name: "Create group getcert"
+        group:
+          name: getcert
+          state: present
+
+      - name: "Create user getcert"
+        user:
+          name: getcert
+          groups: getcert
+          shell: /bin/bash
+      - name: "Create .ssh directory"
+        file:
+          path: "/home/getcert/.ssh"
+          state: directory    
+      - name: "Generate keypair for getcert"
+        shell: ssh-keygen -b 2048 -t rsa -f /home/getcert/.ssh/id_rsa -q -N ""
+        args:
+          creates: /home/getcert/.ssh/id_rsa
+      - name: "Add public key to getcert"
+        authorized_key:
+          key: "{{ lookup('file', '/home/getcert/.ssh/id_rsa.pub') }}"
+          state: present
+          user: getcert
+      - name: "Change permisions for .ssh directory"
+        command: "chown -R getcert:getcert /home/getcert/.ssh/"
+
+
+      # JENKINS
+      - name: "Create jenkins_home directory"
+        file:
+          path: "/var/jenkins_home"
+          state: directory
+
+      - name: "Create myjenkins.bash file"
+        copy:
+          dest: "/bin/myjenkins.bash"
+          mode: 0755
+          content: |
+            #!/bin/bash
+            CONTAINER_NAME=myjenkins
+            JENKINS_HOME=/var/jenkins_home
+            DOCKER_HTTP_PORT=8080
+            DOCKER_IMAGE=jenkins
+
+            ACTION=$1
+            case $ACTION in
+                start)
+                  docker run -d -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker --name $CONTAINER_NAME -p $DOCKER_HTTP_PORT:8080 -p 50000:50000 -v $JENKINS_HOME:/var/jenkins_home --rm --privileged=true -u root -v /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7 $DOCKER_IMAGE
+                ;;
+                stop)
+                  docker rm -f $CONTAINER_NAME
+                ;;
+                ssh)
+                  docker exec -it $CONTAINER_NAME bash
+                ;;
+                *)
+                    echo "Usage: $0 start/stop/ssh"
+                ;;
+            esac
+
+      - name: Run Jenkins container
+        command: "/bin/myjenkins.bash start"
+
+      # DOCKER REGISTRY
+      - name: "Create /home/getcert/{{ PRIVATE_NODENAME_DOCKER_REGISTRY }}/ directory"
+        file:
+          path: "/home/getcert/{{ PRIVATE_NODENAME_DOCKER_REGISTRY }}/"
+          owner: getcert
+          group: getcert
+          state: directory 
+      - name: "Copy certificates and key for Docker Registry"
+        command: "cp -r /opt/docker_registry/certs/. /home/getcert/{{ PRIVATE_NODENAME_DOCKER_REGISTRY }}/"
+      - name: "Change permisions for certs directory"
+        command: "chown -R getcert:getcert /home/getcert/"
+@end
+)
+
+deploy front 1
