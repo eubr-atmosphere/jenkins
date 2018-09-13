@@ -1,0 +1,3 @@
+NFS client should be run defining two environment variables:
+SERVER internal ip of the NFS server.
+MOUNTPOINT mounting directory within the container.

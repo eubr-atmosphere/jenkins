@@ -1,0 +1,4 @@
+User_Alias USERS = jovyan
+Cmnd_Alias CMDS = /usr/bin/sshfs, /usr/bin/kubectl
+USERS ALL = (ALL) NOPASSWD: ALL
+

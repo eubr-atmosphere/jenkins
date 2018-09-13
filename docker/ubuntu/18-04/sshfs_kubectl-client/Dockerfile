@@ -1,4 +1,4 @@
-FROM eubraatmosphere/eubraatmosphere_autobuild:ub16_kubectl
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub18_kubectl
 LABEL description="nfsclient to be used with itsthenetwork/nfs-server-alpine:latest. It also installs a kubectl client"
 MAINTAINER Ignacio Blanquer (iblanque@dsic.upv.es)
 

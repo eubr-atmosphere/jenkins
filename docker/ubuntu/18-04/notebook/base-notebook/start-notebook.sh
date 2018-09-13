@@ -29,6 +29,7 @@ if [ "$SKIPMOUNT" != "true" ]; then
   sudo sshfs -o allow_other -o IdentityFile=$HOMEUSER/.ssh/id_rsa -o StrictHostKeyChecking=no root@$SERVER:/ $MOUNTPOINT
 fi
 
+
 if [ "$STARTCLUSTER" == "true" ]; then
   MYIP=$(hostname -i)
   ipcontroller --ip=$MYIP --ipython-dir=$MOUNTPOINT/.ipython &
