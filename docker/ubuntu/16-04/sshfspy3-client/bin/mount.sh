@@ -21,8 +21,10 @@ if [ "$SKIPMOUNT" != "true" ]; then
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   chmod 400 ~/.ssh/config
 
-  echo "Connecting to root@$SERVER"
-  sshfs -o allow_other root@$SERVER:/ $MOUNTPOINT
+  PORT=${SSH_PORT:-22}
+
+  echo "Connecting to root@$SERVER on port $PORT"
+  sshfs -o allow_other,noempty -p $PORT root@$SERVER:/ $MOUNTPOINT
 fi
 
 # This solution does not work if the argument is a set of bash commands
