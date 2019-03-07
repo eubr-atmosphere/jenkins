@@ -24,7 +24,7 @@ if [ "$SKIPMOUNT" != "true" ]; then
   PORT=${SSH_PORT:-22}
 
   echo "Connecting to root@$SERVER on port $PORT"
-  sshfs -o allow_other,noempty -p $PORT root@$SERVER:/ $MOUNTPOINT
+  sshfs -o allow_other,nonempty -p $PORT root@$SERVER:/ $MOUNTPOINT
 fi
 
 # This solution does not work if the argument is a set of bash commands
