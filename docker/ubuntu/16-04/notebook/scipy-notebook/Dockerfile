@@ -13,8 +13,6 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-USER $NB_UID
-
 # Install Python 3 packages
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
@@ -56,6 +54,8 @@ RUN conda install --quiet --yes \
     rm -rf /home/$NB_USER/.node-gyp && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+USER $NB_UID
 
 # Install facets which does not have a pip or conda package at the moment
 RUN cd /tmp && \
