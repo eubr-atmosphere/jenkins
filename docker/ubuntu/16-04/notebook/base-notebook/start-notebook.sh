@@ -24,9 +24,12 @@ if [ "$SKIPMOUNT" != "true" ]; then
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   chmod 400 ~/.ssh/config
 
-  echo "Connecting to root@$SERVER"
+  PORT=${SSH_PORT:-22}
+
+  echo "Connecting to root@$SERVER on port $PORT"
+
   HOMEUSER=$HOME
-  sudo sshfs -o allow_other -o IdentityFile=$HOMEUSER/.ssh/id_rsa -o StrictHostKeyChecking=no root@$SERVER:/ $MOUNTPOINT
+  sudo sshfs -o allow_other,nonempty -p $PORT -o IdentityFile=$HOMEUSER/.ssh/id_rsa -o StrictHostKeyChecking=no root@$SERVER:/ $MOUNTPOINT
 fi
 
 
