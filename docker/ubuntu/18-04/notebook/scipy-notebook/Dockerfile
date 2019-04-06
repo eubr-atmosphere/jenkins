@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 #FROM jupyter/minimal-notebook
-FROM eubraatmosphere/eubraatmosphere_autobuild:minimal-notebook
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub18_minimal_notebook
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -13,6 +13,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN pip install ipywidgets 
+
+RUN fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
 USER $NB_UID
 
 # Install Python 3 packages
@@ -20,7 +25,6 @@ USER $NB_UID
 # use notebook-friendly backends in these images
 RUN conda install --quiet --yes \
     'conda-forge::blas=*=openblas' \
-    'ipywidgets=7.2*' \
     'pandas=0.23*' \
     'numexpr=2.6*' \
     'matplotlib=2.2*' \

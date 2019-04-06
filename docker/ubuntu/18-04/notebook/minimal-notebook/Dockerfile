@@ -2,7 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 
 # FROM jupyter/base-notebook
-FROM eubraatmosphere/eubraatmosphere_autobuild:base-notebook
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub18_base_notebook
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 

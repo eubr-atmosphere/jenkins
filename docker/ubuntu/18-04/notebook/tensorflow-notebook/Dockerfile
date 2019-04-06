@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 #FROM jupyter/scipy-notebook
-FROM eubraatmosphere/eubraatmosphere_autobuild:scipy-notebook
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub18_scipy-notebook
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
