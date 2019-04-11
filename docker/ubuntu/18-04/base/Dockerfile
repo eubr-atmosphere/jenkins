@@ -6,12 +6,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 
 # Update and install all the necessary packages
+# I have removed httpie  & software-properties-common as they install python2.7 and python3.5 automatically
 RUN apt-get update && apt-get install -y \
     sudo \
     wget \
     curl \
-    httpie \
-    software-properties-common \
     vim \
     tzdata \
  && apt-get clean \

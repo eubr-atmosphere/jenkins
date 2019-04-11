@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 #FROM jupyter/minimal-notebook
-FROM eubraatmosphere/eubraatmosphere_autobuild:minimal-notebook
+FROM eubraatmosphere/eubraatmosphere_autobuild:ub16_minimal-notebook
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
