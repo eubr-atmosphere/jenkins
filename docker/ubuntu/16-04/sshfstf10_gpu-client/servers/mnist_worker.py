@@ -8,6 +8,8 @@ import os
 os.environ['GRPC_POLL_STRATEGY'] = "poll"
 
 import tensorflow as tf
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
 
 FLAGS = None
 
@@ -16,7 +18,7 @@ def train(_):
    worker_hosts = FLAGS.worker_hosts.split(",")
 
    cluster = tf.train.ClusterSpec({"ps":ps_hosts, "worker":worker_hosts})
-   server = tf.train.Server(cluster, job_name=FLAGS.job_name, task_index=FLAGS.task_index)
+   server = tf.train.Server(cluster, config=config, job_name=FLAGS.job_name, task_index=FLAGS.task_index)
 
    print(server.target)
 
