@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# We add the injection of an ssh-key 
+set -e
+echo $SSHKEY > ~/.ssh/authorized_keys    
+
+if [ "$SKIPMOUNT" != "true" ]; then
+  mkdir -p  ~/.ssh
+  echo "SSH Directory created to"
+  echo $SSHPRIVKEY | sed -e 's/\\n/\n/g' > ~/.ssh/id_rsa
+  chmod 400 ~/.ssh/id_rsa
+  echo $SSHPUBKEY > ~/.ssh/id_rsa.pub
+  
+  echo "PRIVKEY:"
+  ls -l ~/.ssh/id_rsa
+  cat ~/.ssh/id_rsa
+  echo "PUBKEY:"
+  ls -l ~/.ssh/id_rsa.pub
+  cat ~/.ssh/id_rsa.pub
+
+  echo "Remove host verification"
+
+  #echo "Host $SERVER" > ~/.ssh/config
+  echo 'Host *' > ~/.ssh/config
+  echo "   StrictHostKeyChecking no" >> ~/.ssh/config
+  chmod 400 ~/.ssh/config
+
+  PORT=${SSH_PORT:-22}
+
+  echo "Connecting to root@$SERVER"
+  sshfs -o allow_other,nonempty -p ${PORT} root@$SERVER:/ $MOUNTPOINT
+fi
+
+# Start the sshd daemon
+# Removing the option -D as it must continue the execution
+/usr/sbin/sshd 
+
+echo "verified"
+
+# Using this instead
+echo "$@" >.runcmd
+source .runcmd
