@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ "$SKIPMOUNT" == "true" ]; then
+if [ "$SKIPMOUNT" != "true" ]; then
   mkdir ~/.ssh
   echo "SSH Directory created to"
   echo $SSHPRIVKEY | sed -e 's/\\n/\n/g' > ~/.ssh/id_rsa
@@ -17,9 +17,13 @@ if [ "$SKIPMOUNT" == "true" ]; then
 
   echo "Remove host verification"
 
-  echo "Host $SERVER" > ~/.ssh/config
+  echo 'Host *' > ~/.ssh/config
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   chmod 400 ~/.ssh/config
+
+  # Same directory for user atmosphere
+  cp -r /root/.ssh /home/atmosphere
+  chown -R atmosphere.atmosphere /home/atmosphere/.ssh  
 
   PORT=${SSH_PORT:-22}
 
@@ -32,4 +36,5 @@ fi
 
 # Using this instead
 echo "$@" >.runcmd
-source .runcmd
+/usr/local/bin/entrypoint.sh .runcmd
+#source .runcmd

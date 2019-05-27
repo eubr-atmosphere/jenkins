@@ -17,7 +17,11 @@ RUN apt-get update && apt-get install -y \
 RUN groupadd -g 1001 jenkins \
  && useradd -m -d /home/jenkins -s /bin/bash -g jenkins -u 1001 jenkins
 
+RUN groupadd -g 1000 atmosphere \
+ && useradd -m -d /home/atmosphere -s /bin/bash -g atmosphere -u 1000 atmosphere
+
 RUN adduser jenkins sudo
+RUN adduser atmosphere sudo
 
 # Enable passwordless sudo for users under the "sudo" group
 RUN sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers

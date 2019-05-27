@@ -10,6 +10,8 @@ os.environ['GRPC_POLL_STRATEGY'] = "poll"
 import tensorflow as tf
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
+config.allow_soft_placement = True
+config.log_device_placement = True
 
 FLAGS = None
 

@@ -10,13 +10,7 @@ RUN apt-get install -y python3.6
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6
 RUN pip install opencv-contrib-python
 RUN pip install ipyparallel
+RUN pip install scikit-image
+RUN pip install scikit-learn
 RUN apt-get -y install libsm6 libxrender1 libxext6
 
-
-#    python3-nose \
-#    python3-mock \
-#    python3-ply \
-#    python-tox \
-#    python3-coverage \
-#RUN apt-get clean \
-# && rm -rf /var/lib/apt/lists/*

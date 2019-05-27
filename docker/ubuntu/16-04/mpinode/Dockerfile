@@ -8,6 +8,7 @@ RUN apt-get -yq install openssh-server; \
   cat /dev/zero | ssh-keygen -q -N ""; \
   touch /root/.ssh/authorized_keys
 
+
 RUN apt install -y openmpi-bin libopenmpi-dev
 
 COPY bin/* /usr/local/bin/

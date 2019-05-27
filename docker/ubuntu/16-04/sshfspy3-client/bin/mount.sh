@@ -15,11 +15,16 @@ if [ "$SKIPMOUNT" != "true" ]; then
   ls -l ~/.ssh/id_rsa.pub
   cat ~/.ssh/id_rsa.pub
 
-  echo "Remove host verification"
-
-  echo "Host $SERVER" > ~/.ssh/config
+  echo 'Host *' > ~/.ssh/config
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   chmod 400 ~/.ssh/config
+
+  # Same directory for user atmosphere
+  cp -r /root/.ssh /home/atmosphere
+  chown -R atmosphere.atmosphere /home/atmosphere/.ssh  
+
+#  UID=$(id -u)
+#  chown -R $UID.$UID ~/.ssh
 
   PORT=${SSH_PORT:-22}
 

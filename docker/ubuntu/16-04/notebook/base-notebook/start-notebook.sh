@@ -5,7 +5,7 @@
 set -e
 
 if [ "$SKIPMOUNT" != "true" ]; then
-  mkdir ~/.ssh
+  mkdir -p ~/.ssh
   echo "SSH Directory created to"
   echo $SSHPRIVKEY | sed -e 's/\\n/\n/g' > ~/.ssh/id_rsa
   chmod 400 ~/.ssh/id_rsa

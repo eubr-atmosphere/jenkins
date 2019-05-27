@@ -1,6 +1,8 @@
 FROM eubraatmosphere/eubraatmosphere_autobuild:ubuntu16
 MAINTAINER Ignacio Blanquer <iblanque@dsic.upv.es> 
 
+#EXAMPLE: docker run -dit --name mpinode -e SSHKEY="ssh-rsa AAA...." image bash
+
 RUN apt-get update
 
 RUN apt-get -yq install openssh-server; \
